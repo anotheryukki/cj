@@ -145,10 +145,6 @@
           <div class="label">Sent Directly by the Team</div>
         </div>
         <div class="rewards-tile">
-          <div class="num" id="rw-claimed">Not Yet</div>
-          <div class="label">Rewards Claimed</div>
-        </div>
-        <div class="rewards-tile">
           <div class="num" id="rw-lastclaim">&mdash;</div>
           <div class="label">Last Claim Date</div>
         </div>
@@ -230,7 +226,6 @@
       document.getElementById('rw-total').textContent = fmtUsd(data.totalUsd);
       document.getElementById('rw-creator').textContent = '$' + (data.creatorRewardsUsd/1000).toFixed(2) + 'K';
       document.getElementById('rw-manual').textContent = fmtUsd(data.manualUsd);
-      document.getElementById('rw-claimed').textContent = data.claimed ? 'Claimed' : 'Not Yet';
       document.getElementById('rw-lastclaim').textContent = data.claimed ? fmtUsd(data.claimedUsd) + ' claimed' : '—';
       if(dot) dot.classList.add('live-on');
       if(updated) updated.textContent = 'Live — auto-updates every 90s. Last pulled from pump.fun at ' + new Date(data.updatedAt).toLocaleTimeString() + '.';
