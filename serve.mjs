@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer-core";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const types = {
   ".html": "text/html",
@@ -47,6 +47,9 @@ let rewardsCache = {
 let scraping = false;
 
 function findChrome() {
+  // In production (Docker/Render) this is set to the apt-installed Chromium.
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) return process.env.PUPPETEER_EXECUTABLE_PATH;
+  // Local Windows dev fallback.
   const candidates = [
     "C:/Users/User/.cache/puppeteer/chrome/win64-151.0.7922.71/chrome-win64/chrome.exe",
     "C:/Users/User/.cache/puppeteer/chrome/win64-148.0.7778.167/chrome-win64/chrome.exe",
@@ -60,7 +63,11 @@ async function scrapeRewards() {
   let browser;
   try {
     const executablePath = findChrome();
-    browser = await puppeteer.launch({ executablePath, headless: true });
+    browser = await puppeteer.launch({
+      executablePath,
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await browser.newPage();
 
     let coinsData = null;
